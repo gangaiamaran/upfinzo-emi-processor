@@ -6,6 +6,7 @@ use App\Models\LoanDetail;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
 
 class LoanDetailRepository
@@ -30,11 +31,9 @@ class LoanDetailRepository
         return $model->simplePaginate(Arr::get($data, 'limit', 10));
     }
 
-    public function cursor(array $data = []): LazyCollection
+    public function rawQuery(): ?array
     {
-        $model = $this->applyFilter($data);
-
-        return $model->cursor();
+        return DB::select('SELECT * FROM loan_details');
     }
 
     /**

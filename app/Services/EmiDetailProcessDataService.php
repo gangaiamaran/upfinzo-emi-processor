@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\EmiDetail;
 use App\Repository\LoanDetailRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EmiDetailProcessDataService
 {
@@ -12,7 +13,7 @@ class EmiDetailProcessDataService
     {
         $loanRepo = new LoanDetailRepository;
 
-        $loanRepo->cursor()->each(function ($loan) {
+        collect($loanRepo->rawQuery())->each(function ($loan) {
             $emiAmount = round($loan->loan_amount / $loan->num_of_payment, 2);
 
             $months = collect(
@@ -28,7 +29,7 @@ class EmiDetailProcessDataService
                 return [$date->format('Y_M') => $emiAmount];
             });
 
-            EmiDetail::create([
+            DB::table('emi_details')->insert([
                 'client_id' => $loan->client_id,
                 ...$months,
             ]);
