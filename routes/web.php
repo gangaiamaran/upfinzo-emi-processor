@@ -4,9 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Models\LoanDetail;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', \App\Http\Controllers\LoanDetail\LoanDetailIndexController::class)->name('dashboard');
